@@ -1,7 +1,11 @@
 // Datalogger.cpp : This file contains the 'main' function. Program execution begins and ends there.
 //
 
+#include "MbusMappingParser.h"
+#include "Utils.h"
 #include <iostream>
+#include <Poco\DateTime.h>
+#include <Poco\DateTimeFormatter.h>
 #include <Poco\JSON\Object.h>
 #include <Poco\JSON\Parser.h>
 #include <Poco\Dynamic\Var.h>
@@ -9,6 +13,12 @@
 #include <map>
 #include <type_traits>
 #include <sstream>
+#include <fstream>
+
+namespace
+{
+	const std::string _JSON_VERSION_ = "1.0";
+}
 
 
 class MapToJsonConvertor
@@ -95,8 +105,23 @@ enum class TestC
 	Offline
 };
 
+
 int main()
 {
+	std::ifstream xmlFile("C:\\temp\\mbus_data.xml");
+	std::string xml((std::istreambuf_iterator<char>(xmlFile)), (std::istreambuf_iterator<char>()));
+
+	Poco::DateTime now;
+	std::string dateTime = Poco::DateTimeFormatter::format(now.timestamp(), Poco::DateTimeFormat::SORTABLE_FORMAT);
+	std::string jsonTemplate = GenerateJsonTemplate(_JSON_VERSION_, "uuid", "masterSN", dateTime);
+
+	MbusMappingParser parser("C:\\temp\\mbus_mappings.xml");
+	parser.Load();
+	std::string json = parser.Parse(xml, jsonTemplate);
+	std::ofstream out("C:\\temp\\json.txt");
+	out << json;
+	out.close();
+
 	std::map<int, TestC> t;
 	t[1] = TestC::Online;
 	t[2] = TestC::Offline;

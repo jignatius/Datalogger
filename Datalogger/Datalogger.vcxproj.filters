@@ -18,5 +18,16 @@
     <ClCompile Include="Datalogger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MbusMappingParser.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="MbusMappingParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Utils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
